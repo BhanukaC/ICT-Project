@@ -21,13 +21,16 @@ int main(void)
 	/* Set Fast PWM, TOP in ICR1, Clear OC1A on compare match, clk/64 */
 	TCCR1A = (1<<WGM11)|(1<<COM1A1);
 	TCCR1B = (1<<WGM12)|(1<<WGM13)|(1<<CS10)|(1<<CS11);
-	//aka pattakata witharak rotate unama athi ne ice cubes watenna
+	
 	for(int i=0;i<2;i++)/* ice cube gana*/
 	{
 		OCR1A = 65;	/* Set servo shaft at -90° position */
-		_delay_ms(3000);
+		_delay_ms(1500);
 		OCR1A = 175;	/* Set servo shaft at 0° position */
 		_delay_ms(1500);
+		OCR1A = 300;	/* Set servo at +90° position */
+		_delay_ms(1500);
 	}
+	return 0;
 }
 
