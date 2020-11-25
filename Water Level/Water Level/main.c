@@ -10,9 +10,12 @@
 
 #include <avr/io.h>						/* Include AVR std. library file */
 #include <util/delay.h>					/* Include inbuilt defined Delay header file */
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include <avr/io.h>
 #include "adc.h"
+#include "lcd.h"
 
 
 
@@ -20,21 +23,36 @@ int main(void)
 {
 	
 	int value;
-	DDRD=0xff;
+	
 
 	ADC_Init();
+	LCD_Init();
+	char buffer [10];
 	
-    int const measure=50;
+   
     while (1) 
     {
 		for(int i=3;i<6;i++){
+			
 			value=ADC_Read(i);	/* Read ADC channel 0 */
-			if(value>measure){
-				PORTD=PORTD |(1<<i);
+			
+			
+			LCD_Clear();
+			LCD_String("Sensor ");
+			if(i==3){
+				LCD_String("1");
+			}else if(i==4){
+				LCD_String("2");
 			}
 			else{
-				PORTD=PORTD & ~(1<<i);
+				LCD_String("3");
 			}
+			LCD_Command(0xC0);
+			dtostrf(value,8,5,buffer);
+			LCD_String(buffer);
+			_delay_ms(200);
+			
+			
 		}
 		
 		
