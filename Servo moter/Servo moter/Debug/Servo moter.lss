@@ -3,29 +3,29 @@ Servo moter.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000011c  00000000  00000000  00000054  2**1
+  0 .text         000000d6  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000170  2**0
+  1 .data         00000000  00800060  00800060  0000012a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000170  2**0
+  2 .comment      00000030  00000000  00000000  0000012a  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001a0  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000015c  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000020  00000000  00000000  000001dc  2**0
+  4 .debug_aranges 00000020  00000000  00000000  00000198  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000067d  00000000  00000000  000001fc  2**0
+  5 .debug_info   00000675  00000000  00000000  000001b8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000583  00000000  00000000  00000879  2**0
+  6 .debug_abbrev 0000058b  00000000  00000000  0000082d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000002a6  00000000  00000000  00000dfc  2**0
+  7 .debug_line   00000291  00000000  00000000  00000db8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000024  00000000  00000000  000010a4  2**2
+  8 .debug_frame  00000024  00000000  00000000  0000104c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000032b  00000000  00000000  000010c8  2**0
+  9 .debug_str    0000032b  00000000  00000000  00001070  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000194  00000000  00000000  000013f3  2**0
+ 10 .debug_loc    00000090  00000000  00000000  0000139b  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000058  00000000  00000000  00001587  2**0
+ 11 .debug_ranges 00000010  00000000  00000000  0000142b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -61,7 +61,7 @@ Disassembly of section .text:
   5c:	de bf       	out	0x3e, r29	; 62
   5e:	cd bf       	out	0x3d, r28	; 61
   60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
-  64:	0c 94 8c 00 	jmp	0x118	; 0x118 <_exit>
+  64:	0c 94 69 00 	jmp	0xd2	; 0xd2 <_exit>
 
 00000068 <__bad_interrupt>:
   68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -90,112 +90,72 @@ int main(void)
 	TCCR1B = (1<<WGM12)|(1<<WGM13)|(1<<CS10)|(1<<CS11);
   7e:	8b e1       	ldi	r24, 0x1B	; 27
   80:	8e bd       	out	0x2e, r24	; 46
-	
-	for(int i=0;i<2;i++)/* ice cube gana*/
+	while(1)
 	{
 		OCR1A = 65;	/* Set servo shaft at -90° position */
   82:	41 e4       	ldi	r20, 0x41	; 65
   84:	50 e0       	ldi	r21, 0x00	; 0
-  86:	5b bd       	out	0x2b, r21	; 43
-  88:	4a bd       	out	0x2a, r20	; 42
+		_delay_ms(1500);
+		OCR1A = 175;	/* Set servo shaft at 0° position */
+  86:	2f ea       	ldi	r18, 0xAF	; 175
+  88:	30 e0       	ldi	r19, 0x00	; 0
+		_delay_ms(1500);
+		OCR1A = 300;	/* Set servo at +90° position */
+  8a:	8c e2       	ldi	r24, 0x2C	; 44
+  8c:	91 e0       	ldi	r25, 0x01	; 1
+	/* Set Fast PWM, TOP in ICR1, Clear OC1A on compare match, clk/64 */
+	TCCR1A = (1<<WGM11)|(1<<COM1A1);
+	TCCR1B = (1<<WGM12)|(1<<WGM13)|(1<<CS10)|(1<<CS11);
+	while(1)
+	{
+		OCR1A = 65;	/* Set servo shaft at -90° position */
+  8e:	5b bd       	out	0x2b, r21	; 43
+  90:	4a bd       	out	0x2a, r20	; 42
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  8a:	2f ef       	ldi	r18, 0xFF	; 255
-  8c:	3e e9       	ldi	r19, 0x9E	; 158
-  8e:	64 e2       	ldi	r22, 0x24	; 36
-  90:	21 50       	subi	r18, 0x01	; 1
-  92:	30 40       	sbci	r19, 0x00	; 0
-  94:	60 40       	sbci	r22, 0x00	; 0
-  96:	e1 f7       	brne	.-8      	; 0x90 <main+0x24>
-  98:	00 c0       	rjmp	.+0      	; 0x9a <main+0x2e>
-  9a:	00 00       	nop
+  92:	6f ef       	ldi	r22, 0xFF	; 255
+  94:	7e e9       	ldi	r23, 0x9E	; 158
+  96:	e4 e2       	ldi	r30, 0x24	; 36
+  98:	61 50       	subi	r22, 0x01	; 1
+  9a:	70 40       	sbci	r23, 0x00	; 0
+  9c:	e0 40       	sbci	r30, 0x00	; 0
+  9e:	e1 f7       	brne	.-8      	; 0x98 <main+0x2c>
+  a0:	00 c0       	rjmp	.+0      	; 0xa2 <main+0x36>
+  a2:	00 00       	nop
 		_delay_ms(1500);
 		OCR1A = 175;	/* Set servo shaft at 0° position */
-  9c:	2f ea       	ldi	r18, 0xAF	; 175
-  9e:	30 e0       	ldi	r19, 0x00	; 0
-  a0:	3b bd       	out	0x2b, r19	; 43
-  a2:	2a bd       	out	0x2a, r18	; 42
-  a4:	7f ef       	ldi	r23, 0xFF	; 255
-  a6:	8d e3       	ldi	r24, 0x3D	; 61
-  a8:	99 e4       	ldi	r25, 0x49	; 73
-  aa:	71 50       	subi	r23, 0x01	; 1
-  ac:	80 40       	sbci	r24, 0x00	; 0
-  ae:	90 40       	sbci	r25, 0x00	; 0
-  b0:	e1 f7       	brne	.-8      	; 0xaa <main+0x3e>
-  b2:	00 c0       	rjmp	.+0      	; 0xb4 <main+0x48>
-  b4:	00 00       	nop
-		_delay_ms(3000);
+  a4:	3b bd       	out	0x2b, r19	; 43
+  a6:	2a bd       	out	0x2a, r18	; 42
+  a8:	6f ef       	ldi	r22, 0xFF	; 255
+  aa:	7e e9       	ldi	r23, 0x9E	; 158
+  ac:	e4 e2       	ldi	r30, 0x24	; 36
+  ae:	61 50       	subi	r22, 0x01	; 1
+  b0:	70 40       	sbci	r23, 0x00	; 0
+  b2:	e0 40       	sbci	r30, 0x00	; 0
+  b4:	e1 f7       	brne	.-8      	; 0xae <main+0x42>
+  b6:	00 c0       	rjmp	.+0      	; 0xb8 <main+0x4c>
+  b8:	00 00       	nop
+		_delay_ms(1500);
 		OCR1A = 300;	/* Set servo at +90° position */
-  b6:	8c e2       	ldi	r24, 0x2C	; 44
-  b8:	91 e0       	ldi	r25, 0x01	; 1
   ba:	9b bd       	out	0x2b, r25	; 43
   bc:	8a bd       	out	0x2a, r24	; 42
-  be:	ef ef       	ldi	r30, 0xFF	; 255
-  c0:	67 ea       	ldi	r22, 0xA7	; 167
-  c2:	71 e6       	ldi	r23, 0x61	; 97
-  c4:	e1 50       	subi	r30, 0x01	; 1
-  c6:	60 40       	sbci	r22, 0x00	; 0
-  c8:	70 40       	sbci	r23, 0x00	; 0
+  be:	6f ef       	ldi	r22, 0xFF	; 255
+  c0:	7e e9       	ldi	r23, 0x9E	; 158
+  c2:	e4 e2       	ldi	r30, 0x24	; 36
+  c4:	61 50       	subi	r22, 0x01	; 1
+  c6:	70 40       	sbci	r23, 0x00	; 0
+  c8:	e0 40       	sbci	r30, 0x00	; 0
   ca:	e1 f7       	brne	.-8      	; 0xc4 <main+0x58>
   cc:	00 c0       	rjmp	.+0      	; 0xce <main+0x62>
   ce:	00 00       	nop
-	TCCR1A = (1<<WGM11)|(1<<COM1A1);
-	TCCR1B = (1<<WGM12)|(1<<WGM13)|(1<<CS10)|(1<<CS11);
-	
-	for(int i=0;i<2;i++)/* ice cube gana*/
-	{
-		OCR1A = 65;	/* Set servo shaft at -90° position */
-  d0:	5b bd       	out	0x2b, r21	; 43
-  d2:	4a bd       	out	0x2a, r20	; 42
-  d4:	ef ef       	ldi	r30, 0xFF	; 255
-  d6:	4e e9       	ldi	r20, 0x9E	; 158
-  d8:	54 e2       	ldi	r21, 0x24	; 36
-  da:	e1 50       	subi	r30, 0x01	; 1
-  dc:	40 40       	sbci	r20, 0x00	; 0
-  de:	50 40       	sbci	r21, 0x00	; 0
-  e0:	e1 f7       	brne	.-8      	; 0xda <main+0x6e>
-  e2:	00 c0       	rjmp	.+0      	; 0xe4 <main+0x78>
-  e4:	00 00       	nop
-		_delay_ms(1500);
-		OCR1A = 175;	/* Set servo shaft at 0° position */
-  e6:	3b bd       	out	0x2b, r19	; 43
-  e8:	2a bd       	out	0x2a, r18	; 42
-  ea:	6f ef       	ldi	r22, 0xFF	; 255
-  ec:	7d e3       	ldi	r23, 0x3D	; 61
-  ee:	e9 e4       	ldi	r30, 0x49	; 73
-  f0:	61 50       	subi	r22, 0x01	; 1
-  f2:	70 40       	sbci	r23, 0x00	; 0
-  f4:	e0 40       	sbci	r30, 0x00	; 0
-  f6:	e1 f7       	brne	.-8      	; 0xf0 <main+0x84>
-  f8:	00 c0       	rjmp	.+0      	; 0xfa <main+0x8e>
-  fa:	00 00       	nop
-		_delay_ms(3000);
-		OCR1A = 300;	/* Set servo at +90° position */
-  fc:	9b bd       	out	0x2b, r25	; 43
-  fe:	8a bd       	out	0x2a, r24	; 42
- 100:	2f ef       	ldi	r18, 0xFF	; 255
- 102:	37 ea       	ldi	r19, 0xA7	; 167
- 104:	41 e6       	ldi	r20, 0x61	; 97
- 106:	21 50       	subi	r18, 0x01	; 1
- 108:	30 40       	sbci	r19, 0x00	; 0
- 10a:	40 40       	sbci	r20, 0x00	; 0
- 10c:	e1 f7       	brne	.-8      	; 0x106 <main+0x9a>
- 10e:	00 c0       	rjmp	.+0      	; 0x110 <main+0xa4>
- 110:	00 00       	nop
-		_delay_ms(4000);
-	}
-	return 0;
-}
- 112:	80 e0       	ldi	r24, 0x00	; 0
- 114:	90 e0       	ldi	r25, 0x00	; 0
- 116:	08 95       	ret
+  d0:	de cf       	rjmp	.-68     	; 0x8e <main+0x22>
 
-00000118 <_exit>:
- 118:	f8 94       	cli
+000000d2 <_exit>:
+  d2:	f8 94       	cli
 
-0000011a <__stop_program>:
- 11a:	ff cf       	rjmp	.-2      	; 0x11a <__stop_program>
+000000d4 <__stop_program>:
+  d4:	ff cf       	rjmp	.-2      	; 0xd4 <__stop_program>
