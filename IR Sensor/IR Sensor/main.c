@@ -11,7 +11,7 @@ int main(void)
 	/* Replace with your application code */
 	while (1)
 	{
-		if(PINC &(1<<PC3))//Check whether pc3 is high
+		if(PIND &(1<<PD6))//Check whether pc3 is high
 		{
 			PORTC=PORTC | 1<<PC4;//output pc4 high
 		}
