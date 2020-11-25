@@ -17,10 +17,11 @@
  
 int main()
 {	
-	char String[20];
+	float calibration_value = 21.34;
 	
-	unsigned long int avgValue;  //Store the average value of the sensor feedback
-	int buf[10],temp;
+	unsigned long int avgval;
+	int buffer_arr[10],temp;
+	char Ph[20];
 	
 
 	ADC_Init();
@@ -29,30 +30,32 @@ int main()
 	{
 		for (int l=0;l<3;l++)      //go through sensor 1,2,3
 		{
-			for(int i=0;i<10;i++)       //Get 10 sample value from the sensor for smooth the value
-			{
-				buf[i]=ADC_Read(l);
+			
+			
 				
+			
+			for(int i=0;i<10;i++)
+			{
+				buffer_arr[i]=ADC_Read(l);
+				_delay_ms(30);
 			}
-			for(int i=0;i<9;i++)        //sort the analog from small to large
+			for(int i=0;i<9;i++)
 			{
 				for(int j=i+1;j<10;j++)
 				{
-					if(buf[i]>buf[j])
+					if(buffer_arr[i]>buffer_arr[j])
 					{
-						temp=buf[i];
-						buf[i]=buf[j];
-						buf[j]=temp;
+						temp=buffer_arr[i];
+						buffer_arr[i]=buffer_arr[j];
+						buffer_arr[j]=temp;
 					}
 				}
 			}
-			avgValue=0;
-			for(int i=2;i<8;i++)                      //take the average value of 6 center sample
-			avgValue+=buf[i];
-			float phValue=(float)avgValue*5.0/1024/6;
-			 //convert the analog into millivolt
-			phValue=3.5*phValue; //convert the millivolt into pH value
-			//double value=(double)phValue;                     
+			avgval=0;
+			for(int i=2;i<8;i++)
+			avgval+=buffer_arr[i];
+			float volt=(float)avgval*5.0/1024/6;
+			float ph_act = -5.70 * volt + calibration_value;                
 			 LCD_Clear();
 			 if(l==0){
 				 LCD_String("Apple");		/* write string on 1st line of LCD*/
@@ -63,8 +66,8 @@ int main()
 			 }
 			
 			LCD_Command(0xc0);					/* Go to 2nd line*/
-			dtostrf(phValue,8,5,String);	/* Integer to string conversion */
-			LCD_String(String);
+			dtostrf(ph_act,8,5,Ph);	/* Integer to string conversion */
+			LCD_String(Ph);
 			
 			_delay_ms(500);
 		}

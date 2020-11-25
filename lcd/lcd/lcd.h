@@ -1,14 +1,16 @@
 /*
  * lcd.h
  *
- * Created: 11/25/2020 1:05:40 AM
+ * Created: 11/26/2020 1:27:07 AM
  *  Author: Bhanuka
  */ 
 
-#include <util/delay.h>		
 
 #ifndef LCD_H_
 #define LCD_H_
+#include <avr/io.h>			/* Include AVR std. library file */
+#include <util/delay.h>			/* Include Delay header file */
+
 #define LCD_Dir  DDRB			/* Define LCD data port direction */
 #define LCD_Port PORTB			/* Define LCD data port */
 #define RS PB0				/* Define Register Select pin */
@@ -88,5 +90,9 @@ void LCD_Clear()
 	_delay_ms(2);
 	LCD_Command (0x80);		/* Cursor at home position */
 }
+
+
+
+
 
 #endif /* LCD_H_ */
