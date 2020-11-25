@@ -21,7 +21,7 @@ int main()
 	
 	unsigned long int avgValue;  //Store the average value of the sensor feedback
 	int buf[10],temp;
-	//char*  names[][10]={"apple","Orange","lime"};
+	
 
 	ADC_Init();
 	LCD_Init();							/* Initialize LCD */
@@ -54,14 +54,21 @@ int main()
 			phValue=3.5*phValue; //convert the millivolt into pH value
 			//double value=(double)phValue;                     
 			 LCD_Clear();
-			LCD_String("Apple");		/* write string on 1st line of LCD*/
+			 if(l==0){
+				 LCD_String("Apple");		/* write string on 1st line of LCD*/
+			 }else if(l==2){
+				 LCD_String("Orange");
+			 }else{
+				 LCD_String("Lime");
+			 }
+			
 			LCD_Command(0xc0);					/* Go to 2nd line*/
 			dtostrf(phValue,8,5,String);	/* Integer to string conversion */
 			LCD_String(String);
 			
-			
+			_delay_ms(500);
 		}
-		_delay_ms(30);
+		
 		
 		
 	}
