@@ -41,7 +41,7 @@ int main(void)
 		time_clock++;  //increase the clock by 1 second
 		for (int i=0;i<3;i++)
 		{
-			float l_minutes=(pulses[i]/2)/7.5;  //calculation
+			float l_minutes=(pulses[i])/7.5;  //calculation
 			display(l_minutes,i);              //display the liter/hour flow rate
 			pulses[i]=0;                        //reset the pulse variable
 		}
