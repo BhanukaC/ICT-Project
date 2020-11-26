@@ -22,18 +22,20 @@ int main(void)
 	LCD_Init();
 	timer0_int();
 	
-	
-	MCUCR |= 1<<ISC01;    //interrupt fire on falling edge in INT0
-	MCUCR |= 1<<ISC11;    //interrupt fire on falling edge in INT1
-	MCUCSR |= 0<<ISC2;    //interrupt fire on falling edge in INT2
-	
-	
 	GICR |= 1<< INT0;     //Enable the external interrupt source in general interrupt control register
 	GICR |= 1<< INT1;     //Enable the external interrupt source in general interrupt control register
 	GICR |= 1<< INT2;     //Enable the external interrupt source in general interrupt control register
 	
+	MCUCR |= 1<<ISC01;    //interrupt fire on falling edge in INT0
+	MCUCR |= 1<<ISC11;    //interrupt fire on falling edge in INT1
 	
-	sei();               //enable global interrupts
+	MCUCSR |= 0<<ISC2;    //interrupt fire on falling edge in INT2
+	
+	
+	
+	
+	
+	
 	
 	
 	while(1){
@@ -81,7 +83,7 @@ void display(float rate,int sensor){
 	LCD_Command(0xc0);
 	LCD_String(out_str);
 	LCD_String(" liter/Min");
-	_delay_ms(200);
+	
 	LCD_Clear();
 	
 	
@@ -89,7 +91,7 @@ void display(float rate,int sensor){
 	
 }
 void timer0_int(){
-	TCCR0 |= 1<<CS02;            //set the prescaler to 1024
+	TCCR0 |= 1<<CS02;            //set the prescaler to 256
 	TCNT0=0;                     //reset the timer
 	TIMSK |= 1<<TOIE0;           //Enable the timer overflow interrupt
 	sei();                       //enable global interrupts
