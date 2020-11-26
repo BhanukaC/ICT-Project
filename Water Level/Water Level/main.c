@@ -33,6 +33,7 @@ int main(void)
     while (1) 
     {
 		for(int i=3;i<6;i++){
+			ADC_Init();
 			
 			value=ADC_Read(i);	/* Read ADC channel 0 */
 			
