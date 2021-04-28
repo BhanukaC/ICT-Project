@@ -9,8 +9,9 @@
 #include <math.h>
 #include "lcd.h"
 
-float time_clock=0;      //Count the time
+
 float pulses[3]={0,0,0};          //Store digital pulses from the sensor
+float volumes[3]={0,0,0};         // Store volumes
 volatile uint8_t tot_overflow;   //To count the time to overflow
 
 
@@ -31,6 +32,9 @@ int main(void)
 	
 	MCUCSR |= 0<<ISC2;    //interrupt fire on falling edge in INT2
 	
+
+
+	
 	
 	
 	
@@ -40,11 +44,13 @@ int main(void)
 	
 	while(1){
 		while(clk()!=1);  //wait 1 second
-		time_clock++;  //increase the clock by 1 second
+		
 		for (int i=0;i<3;i++)
 		{
 			float l_minutes=(pulses[i])/7.5;  //calculation
-			display(l_minutes,i);              //display the liter/hour flow rate
+			 float ml_second=l_minutes*50/3;
+			 volumes[i]+=ml_second;
+			display(volumes[i],i);              //display the liter/MINUTE flow rate
 			pulses[i]=0;                        //reset the pulse variable
 		}
 		
@@ -82,7 +88,7 @@ void display(float rate,int sensor){
 	LCD_String(" : ");
 	LCD_Command(0xc0);
 	LCD_String(out_str);
-	LCD_String(" liter/Min");
+	LCD_String(" ml");
 	
 	LCD_Clear();
 	

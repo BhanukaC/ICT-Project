@@ -341,7 +341,7 @@ int main(void)
 									  while(clk()!=1);  //wait 1 second
 									  time_clock++;  //increase the clock by 1 second
 									  
-										  float l_minutes=(pulses[0]/2)/7.5;  //calculation
+										  float l_minutes=(pulses[0])/7.5;  //calculation
 										  float ml_second=l_minutes*50/3;
 										  vol+=ml_second;
 										  pulses[0]=0;                        //reset the pulse variable
@@ -360,7 +360,7 @@ int main(void)
 									  while(clk()!=1);  //wait 1 second
 									  time_clock++;  //increase the clock by 1 second
 									  
-									  float l_minutes=(pulses[1]/2)/7.5;  //calculation
+									  float l_minutes=(pulses[1])/7.5;  //calculation
 									  float ml_second=l_minutes*50/3;
 									  vol+=ml_second;
 									  pulses[1]=0;                        //reset the pulse variable
@@ -380,7 +380,7 @@ int main(void)
 									  while(clk()!=1);  //wait 1 second
 									  time_clock++;  //increase the clock by 1 second
 									  
-									  float l_minutes=(pulses[2]/2)/7.5;  //calculation
+									  float l_minutes=(pulses[2])/7.5;  //calculation
 									  float ml_second=l_minutes*50/3;
 									  vol+=ml_second;
 									  pulses[2]=0;                        //reset the pulse variable
