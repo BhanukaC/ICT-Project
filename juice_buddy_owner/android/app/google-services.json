@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "275914050497",
+    "firebase_url": "https://juice-buddy-d4fd4.firebaseio.com",
+    "project_id": "juice-buddy-d4fd4",
+    "storage_bucket": "juice-buddy-d4fd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275914050497:android:922259f69729c397683d40",
+        "android_client_info": {
+          "package_name": "com.codewithx.juice_buddy_owner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "275914050497-88ndh49fuh3mpo05gi0rnv4o1bqn4emm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXuq3fytHudwfG4V7Jk7P0zVIeRyV9iwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "275914050497-88ndh49fuh3mpo05gi0rnv4o1bqn4emm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275914050497:android:aa3860bcc939d8d4683d40",
+        "android_client_info": {
+          "package_name": "com.codewithx.juice_buddy_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "275914050497-88ndh49fuh3mpo05gi0rnv4o1bqn4emm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXuq3fytHudwfG4V7Jk7P0zVIeRyV9iwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "275914050497-88ndh49fuh3mpo05gi0rnv4o1bqn4emm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
