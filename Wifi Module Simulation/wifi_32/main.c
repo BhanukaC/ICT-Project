@@ -1,6 +1,6 @@
 /*
 * ATmega32_WIFI
-* 
+*
 *
 */
 
@@ -20,33 +20,33 @@
 #define DEFAULT_BUFFER_SIZE		160
 #define DEFAULT_TIMEOUT			10000
 
-/* Connection Mode */
+/* Connection Mode (CIPMUX) */
 #define SINGLE					0
 #define MULTIPLE				1
 
-/* Application Mode */
+/* Application Mode (CIPMODE) */
 #define NORMAL					0
 #define TRANSPERANT				1
 
-/* Application Mode */
+/* Application Mode (CWMODE) */
 #define STATION							1
 #define ACCESSPOINT						2
 #define BOTH_STATION_AND_ACCESPOINT		3
 
 /* Select Demo */
-#define RECEIVE_DATA				/* Define RECEIVE demo */
-#define SEND_DATA					/* Define SEND demo */
+#define RECEIVE_DATA				/* Define RECEIVE data */
+#define SEND_DATA					/* Define SEND data */
 
 
 
 #define DOMAIN				"juice-buddy-d4fd4.firebaseio.com"
 #define PORT				"443"
-#define API_WRITE_KEY		"IYngStA7BfvPFRXnEWkBoGoD29B7p0lpC8OrYitu"
-#define CHANNEL_ID			""
+#define API_WRITE_KEY		"6033YJ60ZOGPNSZO"
+#define CHANNEL_ID			"getAccount"
+#define ACCOUNT_NO			"010002351680"
 
-
-#define SSID				"Bhanuka Pc Network"
-#define PASSWORD			"password"
+#define SSID				"Dialog 4G FB9"
+#define PASSWORD			"D3i9QF66"
 
 enum ESP8266_RESPONSE_STATUS{
 	ESP8266_RESPONSE_WAITING,
@@ -194,11 +194,7 @@ bool ESP8266_ConnectionMode(uint8_t Mode)
 
 bool ESP8266_Begin()
 {
-	for (uint8_t i=0;i<5;i++)
-	PORTC |=  (1 << PC7);
-	_delay_ms(50);
-	PORTC &= ~(1 << PC7);
-	_delay_ms(50);
+
 	{
 		if(SendATandExpectResponse("ATE0","OK")||SendATandExpectResponse("AT","OK"))
 		return true;
@@ -260,9 +256,9 @@ uint8_t ESP8266_connected()
 uint8_t ESP8266_Start(uint8_t _ConnectionNumber, char* Domain, char* Port)
 {
 	bool _startResponse;
-	char _atCommand[60];
+	char _atCommand[80];
 	memset(_atCommand, 0, 60);
-	_atCommand[59] = 0;
+	_atCommand[79] = 0;
 
 	if(SendATandExpectResponse("AT+CIPMUX?", "CIPMUX:0"))
 	sprintf(_atCommand, "AT+CIPSTART=\"TCP\",\"%s\",%s", Domain, Port);
@@ -334,14 +330,20 @@ ISR (USART_RXC_vect)
 int main(void)
 {
 	
-
+	DDRD |=(1<<3);     /* Define PD3 Pin as a Output */
+	PORTD |=(1<<3);
+	
+	
 	
 	
 	char _buffer[150];
+	char _buffer2[150];
+	char _buffer3[150];
+	char _buffer4[150];
+	char _buffer5[150];
+	
+	
 	uint8_t Connect_Status;
-	#ifdef SEND_DATA
-	uint8_t Sample = 0;
-	#endif
 
 	USART_Init(9600);			/* Initiate USART with 115200 baud rate */
 	sei();					/* Start global interrupt */
@@ -362,16 +364,47 @@ int main(void)
 		if(Connect_Status == ESP8266_TRANSMISSION_DISCONNECTED)
 		ESP8266_Start(0, DOMAIN, PORT);
 		
-		
-
-		
-						#ifdef RECEIVE_DATA
+				#ifdef RECEIVE_DATA
 		memset(_buffer, 0, 150);
 		sprintf(_buffer, "POST https://juice-buddy-d4fd4.firebaseio.com/Orders/lastOrder.json");
 		ESP8266_Send(_buffer);
 		Read_Data(_buffer);
+		 char * order_id = strtok(_buffer, " ");
+		
+		memset(_buffer2, 0, 150);
+		sprintf(_buffer2, "POST https://juice-buddy-d4fd4.firebaseio.com/Orders/%s/Apple.json",order_id);
+		ESP8266_Send(_buffer2);
+		Read_Data(_buffer2);
+		   char * token2 = strtok(_buffer2, " ");
+		   
+		SendATandExpectResponse(token2, "OK");
+		
+		
+		memset(_buffer3, 0, 150);
+		sprintf(_buffer3, "POST https://juice-buddy-d4fd4.firebaseio.com/Orders/%s/Ice.json",order_id);
+		ESP8266_Send(_buffer3);
+		Read_Data(_buffer3);
+		 char * token3 = strtok(_buffer3, " ");
+		 SendATandExpectResponse(token3, "OK");
+		
+		
+		memset(_buffer4, 0, 150);
+		sprintf(_buffer4, "POST https://juice-buddy-d4fd4.firebaseio.com/Orders/%s/Lime.json",order_id);
+		ESP8266_Send(_buffer4);
+		Read_Data(_buffer4);
+		 char * token4 = strtok(_buffer4, " ");
+		 SendATandExpectResponse(token4, "OK");
+		
+		memset(_buffer5, 0, 150);
+		sprintf(_buffer5, "POST https://juice-buddy-d4fd4.firebaseio.com/Orders/%s/Orange.json",order_id);
+		ESP8266_Send(_buffer5);
+		Read_Data(_buffer5);
+		 char * token5 = strtok(_buffer5, " ");
+		 SendATandExpectResponse(token5, "OK");
+		
+		
 		_delay_ms(600);
 		#endif
-		}
+	}
 	
 }
